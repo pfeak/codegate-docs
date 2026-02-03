@@ -1,0 +1,6 @@
+---
+title: "Verify (redeem) code"
+openapi: "en/api-reference/openapi.json POST /api/v1/projects/{project_id}/codes/verify"
+---
+
+Verifies (redeems) a code for the project. Request body must include `code` (required); optional `verified_by` records who verified. Succeeds only when the code is unused, not disabled, not expired, and the project is enabled. Response `success=true` means success; when `success=false`, check `error_code` and `message` (e.g. `CODE_ALREADY_USED`, `CODE_EXPIRED`).

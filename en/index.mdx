@@ -1,0 +1,85 @@
+---
+title: "CodeGate Overview"
+description: "Lightweight activation code, invite code, and verification code management - REST API and multi-language SDK"
+---
+
+## What is CodeGate?
+
+CodeGate is a lightweight Python backend service focused on **activation codes, invite codes, and verification codes (OTP)** — generation, expiration, verification, and management. It provides **REST API** and **Python / JavaScript SDK**, and can run **standalone** or be **embedded in other systems**. It fits **SaaS platforms, mobile apps, games, membership systems**, and similar use cases.
+
+## Core features
+
+- **Project management**: Create, update, and query projects with project-level activation code management
+- **Batch code generation**: Custom format (length, prefix, suffix), per-code expiration
+- **Code verification**: Verify via API or web UI, prevent double use, automatic expiration checks
+- **Reactivate**: Reset used codes to unused (e.g. refund scenarios)
+- **API Key auth**: HMAC-SHA256 signature; Secret never transmitted
+- **Multi-language SDK**: Python and JavaScript/TypeScript clients
+
+## Quick start
+
+<Card
+  title="Quick start"
+  icon="rocket"
+  href="/en/quickstart"
+  horizontal
+>
+  Install and verify your first code in four steps
+</Card>
+
+## Using the SDK
+
+Prefer the SDK to avoid writing signing logic:
+
+<Columns cols={2}>
+  <Card
+    title="Python SDK"
+    icon="python"
+    href="/en/sdk/python"
+  >
+    For Python 3.10+ projects
+  </Card>
+  <Card
+    title="JavaScript SDK"
+    icon="javascript"
+    href="/en/sdk/javascript"
+  >
+    For Node.js 18+ and TypeScript
+  </Card>
+</Columns>
+
+## API reference
+
+Calling the REST API directly? See the full endpoint docs and OpenAPI spec:
+
+<Card
+  title="API reference"
+  icon="terminal"
+  href="/en/api-reference/introduction"
+>
+  Projects, codes, verify, reactivate, statistics
+</Card>
+
+## AI / LLM index
+
+Document index for AI/LLM (llms.txt); open in a new window:
+
+<Card
+  title="llms.txt"
+  icon="file-lines"
+  href="/en/llms"
+  horizontal
+>
+  Open llms.txt in a new window
+</Card>
+
+## Tech stack
+
+- **Backend**: Python 3.12+, FastAPI, SQLAlchemy
+- **Database**: SQLite / PostgreSQL
+- **Frontend**: Next.js + Tailwind CSS
+- **Deploy**: Docker / docker compose
+
+## License
+
+Apache License 2.0

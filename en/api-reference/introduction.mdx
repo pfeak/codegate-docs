@@ -1,0 +1,67 @@
+---
+title: "API reference"
+description: "CodeGate SDK API reference - API Key + HMAC signature authentication"
+---
+
+## Overview
+
+The CodeGate SDK API provides project info, code listing, verify, reactivate, and statistics. All endpoints require **API Key + HMAC-SHA256 signature** authentication.
+
+Prefer the [Python SDK](/en/sdk/python) or [JavaScript SDK](/en/sdk/javascript) to avoid writing signing logic.
+
+## Authentication
+
+Each request must carry the following in HTTP headers:
+
+| Header | Description |
+|--------|-------------|
+| `X-API-Key` | API Key (32-char UUID, no hyphens) |
+| `X-Timestamp` | Unix timestamp (seconds) |
+| `X-Signature` | HMAC-SHA256 signature (lowercase hex, 64 chars) |
+
+Signature string format:
+
+```
+{METHOD}\n{PATH}\n{QUERY_STRING}\n{BODY_SHA256_HEX}\n{TIMESTAMP}
+```
+
+- For empty body use SHA256 of empty string: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- Timestamp must be within ±5 minutes to prevent replay attacks
+
+## Endpoint quick reference
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET | `/api/v1/projects/{project_id}` | Project info |
+| GET | `/api/v1/projects/{project_id}/codes` | List codes with pagination |
+| GET | `/api/v1/projects/{project_id}/codes/{code_id}` | Get one code by ID |
+| GET | `/api/v1/projects/{project_id}/codes/by-code/{code}` | Get one code by code string |
+| POST | `/api/v1/projects/{project_id}/codes/verify` | Verify (redeem) |
+| POST | `/api/v1/projects/{project_id}/codes/reactivate` | Reactivate |
+| GET | `/api/v1/projects/{project_id}/statistics` | Statistics |
+
+## Business error codes (verify / reactivate)
+
+When the response has `success=false`, `error_code` may be:
+
+| Error code | Meaning |
+|------------|--------|
+| `CODE_NOT_FOUND` | Activation code not found |
+| `CODE_ALREADY_USED` | Already used (on verify) |
+| `CODE_ALREADY_UNUSED` | Already unused (on reactivate) |
+| `CODE_DISABLED` | Code disabled |
+| `CODE_EXPIRED` | Code expired |
+| `PROJECT_DISABLED` | Project disabled |
+| `PROJECT_EXPIRED` | Project expired |
+
+## HTTP status codes
+
+| Status code | Description |
+|--------|-------------|
+| 200 | Request succeeded |
+| 400 | Parameter error |
+| 401 | Authentication failed |
+| 403 | project_id does not match API Key |
+| 404 | Resource not found |
+| 429 | Rate limited |
+| 500 | Server error |

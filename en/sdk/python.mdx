@@ -1,0 +1,164 @@
+---
+title: "Python SDK"
+description: "CodeGate Python client - code listing, verify, reactivate"
+---
+
+## Install
+
+```bash
+pip install codegate-sdk
+```
+
+Or with `uv`:
+
+```bash
+uv pip install codegate-sdk
+```
+
+## Requirements
+
+- **Python** >= 3.10
+- Dependency: `requests>=2.28.0`
+
+## Quick start
+
+```python
+from codegate_sdk import CodeGateClient
+
+client = CodeGateClient(
+    api_key="550e8400e29b41d4a716446655440000",
+    secret="a1b2c3d4e5f6...",
+    project_id="550e8400e29b41d4a716446655440000",
+    base_url="https://api.example.com"
+)
+
+# Get project info
+project = client.get_project()
+print(f"Project: {project['name']}")
+
+# Verify code
+result = client.verify_code(code="ABC12345", verified_by="user123")
+if result['success']:
+    print(f"Code verified at: {result['verified_at']}")
+```
+
+## API overview
+
+| Method | Description |
+|--------|-------------|
+| `get_project()` | Get project info |
+| `list_codes(page?, page_size?, status?, search?)` | List codes with pagination |
+| `get_code(code_id)` | Get one code by ID |
+| `get_code_by_code(code)` | Get one code by code string |
+| `verify_code(code, verified_by?)` | Verify (redeem) a code |
+| `reactivate_code(code, reactivated_by?, reason?)` | Reactivate a used code |
+| `get_statistics()` | Project statistics |
+
+`status` options: `unused`, `used`, `disabled`, `expired`.
+
+## Usage details
+
+### Pagination and filters
+
+```python
+# Unused only, search by keyword
+resp = client.list_codes(page=1, page_size=50, status="unused", search="PROMO2024")
+total, total_pages = resp["total"], resp["total_pages"]
+
+# Iterate all unused codes
+for p in range(1, total_pages + 1):
+    page = client.list_codes(page=p, page_size=100, status="unused")
+    for c in page["items"]:
+        print(c["code"])
+```
+
+### Verify result and error_code
+
+When the API does not raise, verify uses `success` and `error_code`:
+
+```python
+result = client.verify_code(code="ABC12345", verified_by="user123")
+if result["success"]:
+    print("Verified", result["verified_at"])
+else:
+    print(result.get("error_code"), result.get("message"))
+```
+
+Common `error_code`: `CODE_ALREADY_USED`, `CODE_NOT_FOUND`, `CODE_DISABLED`, `CODE_EXPIRED`, etc.
+
+### Retry and resilience
+
+Retry a limited number of times on 5xx or network errors:
+
+```python
+import time
+
+def with_retry(fn, max_retries=3):
+    for i in range(max_retries):
+        try:
+            return fn()
+        except Exception as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            is_retryable = status is not None and status >= 500
+            if i == max_retries - 1 or not is_retryable:
+                raise
+            time.sleep(1 * (i + 1))
+
+result = with_retry(lambda: client.verify_code(code="ABC12345"))
+```
+
+### Custom requests and generate_signature
+
+For your own HTTP client, use `generate_signature` to build the signature:
+
+```python
+import time
+from codegate_sdk import generate_signature
+
+method = "GET"
+path = f"/api/v1/projects/{project_id}/codes"
+query_params = {"page": "1", "page_size": "20", "status": "unused"}
+timestamp = int(time.time())
+sig = generate_signature(method, path, query_params, None, timestamp, secret)
+# Set X-Signature, X-API-Key, X-Timestamp in headers
+```
+
+## Error handling
+
+- **4xx/5xx**: Client raises `requests.HTTPError`; use `e.response.status_code` (e.g. 401, 403, 404, 429).
+- **Business failure**: When verify/reactivate returns `success=False`, use `result['error_code']` for the reason.
+
+## Install from build
+
+Install from local build (e.g. for development):
+
+```bash
+cd sdk/python && uv build
+pip install dist/codegate_sdk-*.whl
+```
+
+## Run examples
+
+```bash
+cd sdk/python
+uv run python examples/basic_usage.py
+uv run python examples/error_handling.py
+```
+
+Set `CODEGATE_API_KEY`, `CODEGATE_SECRET`, `CODEGATE_PROJECT_ID`, `CODEGATE_BASE_URL` (optional) first.
+
+## Development
+
+### Build
+
+```bash
+cd sdk/python
+uv build
+```
+
+### Tests
+
+```bash
+cd sdk/python
+uv run pytest
+```

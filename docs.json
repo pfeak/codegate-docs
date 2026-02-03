@@ -8,55 +8,121 @@
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+  "api": {
+    "playground": {
+      "display": "none"
+    }
+  },
   "navigation": {
-    "tabs": [
+    "languages": [
       {
-        "tab": "指南",
-        "groups": [
+        "language": "cn",
+        "tabs": [
           {
-            "group": "入门",
-            "pages": [
-              "index",
-              "quickstart",
-              "llms"
+            "tab": "指南",
+            "groups": [
+              {
+                "group": "入门",
+                "pages": [
+                  "index",
+                  "quickstart",
+                  "llms"
+                ]
+              },
+              {
+                "group": "SDK",
+                "pages": [
+                  "sdk/python",
+                  "sdk/javascript"
+                ]
+              },
+              {
+                "group": "AI 工具集成",
+                "pages": [
+                  "ai-tools/cursor",
+                  "ai-tools/claude-code",
+                  "ai-tools/windsurf"
+                ]
+              }
             ]
           },
           {
-            "group": "SDK",
-            "pages": [
-              "sdk/python",
-              "sdk/javascript"
-            ]
-          },
-          {
-            "group": "AI 工具集成",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+            "tab": "API 参考",
+            "groups": [
+              {
+                "group": "API 概览",
+                "pages": [
+                  "api-reference/introduction"
+                ]
+              },
+              {
+                "group": "项目与激活码",
+                "pages": [
+                  "api-reference/endpoint/get-project",
+                  "api-reference/endpoint/list-codes",
+                  "api-reference/endpoint/get-code",
+                  "api-reference/endpoint/get-code-by-code",
+                  "api-reference/endpoint/verify",
+                  "api-reference/endpoint/reactivate",
+                  "api-reference/endpoint/statistics"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "API 参考",
-        "groups": [
+        "language": "en",
+        "tabs": [
           {
-            "group": "API 概览",
-            "pages": [
-              "api-reference/introduction"
+            "tab": "Guide",
+            "groups": [
+              {
+                "group": "Getting started",
+                "pages": [
+                  "en/index",
+                  "en/quickstart",
+                  "en/llms"
+                ]
+              },
+              {
+                "group": "SDK",
+                "pages": [
+                  "en/sdk/python",
+                  "en/sdk/javascript"
+                ]
+              },
+              {
+                "group": "AI tools",
+                "pages": [
+                  "en/ai-tools/cursor",
+                  "en/ai-tools/claude-code",
+                  "en/ai-tools/windsurf"
+                ]
+              }
             ]
           },
           {
-            "group": "项目与激活码",
-            "pages": [
-              "api-reference/endpoint/get-project",
-              "api-reference/endpoint/list-codes",
-              "api-reference/endpoint/get-code",
-              "api-reference/endpoint/get-code-by-code",
-              "api-reference/endpoint/verify",
-              "api-reference/endpoint/reactivate",
-              "api-reference/endpoint/statistics"
+            "tab": "API reference",
+            "groups": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "en/api-reference/introduction"
+                ]
+              },
+              {
+                "group": "Projects & codes",
+                "pages": [
+                  "en/api-reference/endpoint/get-project",
+                  "en/api-reference/endpoint/list-codes",
+                  "en/api-reference/endpoint/get-code",
+                  "en/api-reference/endpoint/get-code-by-code",
+                  "en/api-reference/endpoint/verify",
+                  "en/api-reference/endpoint/reactivate",
+                  "en/api-reference/endpoint/statistics"
+                ]
+              }
             ]
           }
         ]

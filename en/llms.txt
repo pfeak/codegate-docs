@@ -1,0 +1,31 @@
+# CodeGate Documentation
+
+> Document index for AI/LLM discovery and retrieval. Access this file at `/en/llms.txt` when viewing the site in English.
+
+## Guide
+
+- [CodeGate Overview](/en): Lightweight activation code, invite code, and verification code management - REST API and multi-language SDK
+- [Quick start](/en/quickstart): Install CodeGate and verify your first activation code in four steps
+- [llms.txt](/en/llms): Entry page for llms.txt - for AI/LLM discovery and indexing of CodeGate docs
+
+## SDK
+
+- [Python SDK](/en/sdk/python): CodeGate Python client - code listing, verify, reactivate
+- [JavaScript SDK](/en/sdk/javascript): CodeGate JavaScript/TypeScript client - code listing, verify, reactivate
+
+## API reference
+
+- [API reference](/en/api-reference/introduction): CodeGate REST API - API Key + HMAC signature authentication
+- [Get project](/en/api-reference/endpoint/get-project): Get project details and statistics
+- [List codes](/en/api-reference/endpoint/list-codes): List codes with pagination, filters and search
+- [Get code by ID](/en/api-reference/endpoint/get-code): Get one code by ID
+- [Get code by code string](/en/api-reference/endpoint/get-code-by-code): Get one code by code string
+- [Verify (redeem) code](/en/api-reference/endpoint/verify): Verify a code for the project
+- [Reactivate code](/en/api-reference/endpoint/reactivate): Reset a used code to unused
+- [Statistics](/en/api-reference/endpoint/statistics): Project statistics
+
+## AI tools (contributors)
+
+- [Cursor setup](/en/ai-tools/cursor): Configure Cursor to write and maintain CodeGate docs (contributor guide)
+- [Claude Code setup](/en/ai-tools/claude-code): Configure Claude Code to write and maintain CodeGate docs (contributor guide)
+- [Windsurf setup](/en/ai-tools/windsurf): Configure Windsurf to write and maintain CodeGate docs (contributor guide)

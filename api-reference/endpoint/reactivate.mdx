@@ -1,6 +1,6 @@
 ---
 title: "重新激活激活码"
-openapi: "POST /api/v1/projects/{project_id}/codes/reactivate"
+openapi: "api-reference/openapi.json POST /api/v1/projects/{project_id}/codes/reactivate"
 ---
 
 将已使用（已核销）的激活码重置为未使用状态。请求体需包含 `code`（必需），可选 `reactivated_by`、`reason`。仅当激活码处于已使用、未禁用、未过期且项目启用时可重新激活。适用于用户退款、误核销回滚等场景。响应中 `success=true` 表示成功，否则查看 `error_code`（如 `CODE_ALREADY_UNUSED`、`CODE_EXPIRED`）。

@@ -1,0 +1,6 @@
+---
+title: "Get code by code string"
+openapi: "en/api-reference/openapi.json GET /api/v1/projects/{project_id}/codes/by-code/{code}"
+---
+
+Returns a single activation code by its content (not ID). The path `{code}` is the raw code value and must be URL-encoded. Response format is the same as [Get code by ID](/en/api-reference/endpoint/get-code), including `verification_logs`.

@@ -1,6 +1,6 @@
 ---
 title: "查询单个激活码（按 ID）"
-openapi: "GET /api/v1/projects/{project_id}/codes/{code_id}"
+openapi: "api-reference/openapi.json GET /api/v1/projects/{project_id}/codes/{code_id}"
 ---
 
 根据激活码 ID 查询单个激活码详情，包含核销状态、禁用/过期状态及 `verification_logs`（核销记录）。若已知激活码内容而非 ID，请使用 [按内容查询](/api-reference/endpoint/get-code-by-code)。

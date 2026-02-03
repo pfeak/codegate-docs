@@ -1,0 +1,6 @@
+---
+title: "List codes"
+openapi: "en/api-reference/openapi.json GET /api/v1/projects/{project_id}/codes"
+---
+
+Lists codes for the project with pagination. Supports filtering by status (`unused` / `used` / `disabled` / `expired`) and a `search` keyword on the code value. Response includes `id`, `code`, `status`, `is_disabled`, `is_expired`, `expires_at`, `verified_at`, `verified_by`, `created_at`.

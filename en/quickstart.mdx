@@ -1,0 +1,175 @@
+---
+title: "Quick start"
+description: "Install CodeGate and verify your first activation code in four steps"
+---
+
+## Run CodeGate with Docker
+
+If CodeGate is not deployed yet, pull the image:
+
+```bash
+docker pull pfeak/codegate:latest
+```
+
+Start the container:
+
+```bash
+docker run -d --name codegate \
+  -p 8877:8877 \
+  -v codegate-data:/app/backend/data \
+  --restart unless-stopped \
+  pfeak/codegate:latest
+```
+
+Parameter notes:
+
+> `-p 8877:8877`: Maps the admin UI port  
+> `-v codegate-data:/app/backend/data`: Mounts a volume for data persistence  
+
+Then open:
+
+- **Admin UI**: `<http://localhost:8877>`
+
+Use `base_url` = `http://localhost:8877` in the steps below (or your host/domain if the API and caller are on different machines).
+
+## Prerequisites
+
+- A running CodeGate instance (API URL and admin UI). If you used the Docker command above, nothing else is needed.
+
+## Step 1: Install the SDK
+
+Choose by stack:
+
+<Tabs>
+  <Tab title="Python">
+```bash
+pip install codegate-sdk
+```
+
+Or with `uv`:
+
+```bash
+uv pip install codegate-sdk
+```
+  </Tab>
+  <Tab title="JavaScript">
+```bash
+npm install codegate-sdk
+```
+  </Tab>
+</Tabs>
+
+## Step 2: Create a project and API key in CodeGate
+
+1. Log in to the CodeGate admin UI.
+2. Create a project (if needed).
+3. Go to project details → **API keys**.
+4. Click **Generate key** to get `api_key`, `secret`, and `project_id`.
+
+<Warning>
+  **Secret is shown only once.** Save it immediately; it cannot be viewed again.
+</Warning>
+
+## Step 3: Initialize the client
+
+<Tabs>
+  <Tab title="Python">
+```python
+from codegate_sdk import CodeGateClient
+
+client = CodeGateClient(
+    api_key="550e8400e29b41d4a716446655440000",
+    secret="a1b2c3d4e5f6...",
+    project_id="550e8400e29b41d4a716446655440000",
+    base_url="https://api.example.com"
+)
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+import { CodeGateClient } from 'codegate-sdk';
+
+const client = new CodeGateClient({
+  apiKey: '550e8400e29b41d4a716446655440000',
+  secret: 'a1b2c3d4e5f6...',
+  projectId: '550e8400e29b41d4a716446655440000',
+  baseUrl: 'https://api.example.com',
+});
+```
+  </Tab>
+</Tabs>
+
+Replace `api_key`, `secret`, `project_id` with your credentials and `base_url` with your CodeGate API URL.
+
+## Step 4: Verify an activation code
+
+<Tabs>
+  <Tab title="Python">
+```python
+result = client.verify_code(code="ABC12345", verified_by="user123")
+if result['success']:
+    print(f"Verified at: {result['verified_at']}")
+else:
+    print(f"Failed: {result['error_code']} - {result['message']}")
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+const result = await client.verifyCode({ code: 'ABC12345', verifiedBy: 'user123' });
+if (result.success) {
+  console.log('Verified at:', result.verified_at);
+} else {
+  console.log('Failed:', result.error_code, result.message);
+}
+```
+  </Tab>
+</Tabs>
+
+## Environment variables (recommended)
+
+For production, use environment variables for credentials:
+
+| Environment variable | Description |
+|----------------------|-------------|
+| `CODEGATE_API_KEY` | API Key |
+| `CODEGATE_SECRET` | API Secret |
+| `CODEGATE_PROJECT_ID` | Project ID |
+| `CODEGATE_BASE_URL` | API base URL (optional, default `https://api.example.com`) |
+
+<Tabs>
+  <Tab title="Python">
+```python
+import os
+client = CodeGateClient(
+    api_key=os.getenv("CODEGATE_API_KEY"),
+    secret=os.getenv("CODEGATE_SECRET"),
+    project_id=os.getenv("CODEGATE_PROJECT_ID"),
+    base_url=os.getenv("CODEGATE_BASE_URL", "https://api.example.com")
+)
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+const client = new CodeGateClient({
+  apiKey: process.env.CODEGATE_API_KEY!,
+  secret: process.env.CODEGATE_SECRET!,
+  projectId: process.env.CODEGATE_PROJECT_ID!,
+  baseUrl: process.env.CODEGATE_BASE_URL || 'https://api.example.com',
+});
+```
+  </Tab>
+</Tabs>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Python SDK" icon="python" href="/en/sdk/python">
+    More Python usage
+  </Card>
+  <Card title="JavaScript SDK" icon="javascript" href="/en/sdk/javascript">
+    More JavaScript usage
+  </Card>
+  <Card title="API reference" icon="code" href="/en/api-reference/introduction">
+    Call REST API directly
+  </Card>
+</CardGroup>

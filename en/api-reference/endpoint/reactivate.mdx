@@ -1,0 +1,6 @@
+---
+title: "Reactivate code"
+openapi: "en/api-reference/openapi.json POST /api/v1/projects/{project_id}/codes/reactivate"
+---
+
+Resets a used (verified) activation code to unused. Request body must include `code` (required); optional `reactivated_by` and `reason`. Reactivation succeeds only when the code is used, not disabled, not expired, and the project is enabled. Use for scenarios such as refunds or rolling back mistaken verification. Response `success=true` means success; otherwise check `error_code` (e.g. `CODE_ALREADY_UNUSED`, `CODE_EXPIRED`).
