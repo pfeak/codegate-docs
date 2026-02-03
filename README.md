@@ -1,6 +1,6 @@
 # CodeGate 文档
 
-CodeGate 激活码管理服务的官方文档，基于 [Mintlify](https://mintlify.com) 构建。
+CodeGate 激活码管理服务的文档，基于 [Mintlify](https://mintlify.com) 构建。
 
 ## 内容概览
 

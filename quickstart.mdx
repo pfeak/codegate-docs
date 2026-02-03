@@ -3,9 +3,38 @@ title: "快速开始"
 description: "四步完成 CodeGate 安装与第一次激活码核销"
 ---
 
+## 一键启动 CodeGate（Docker 镜像）
+
+若尚未部署 CodeGate，可通过 `docker pull` 拉取镜像：
+
+```bash
+docker pull pfeak/codegate:latest
+```
+
+启动镜像：
+
+```bash
+docker run -d --name codegate \
+  -p 8877:8877 \
+  -v codegate-data:/app/backend/data \
+  --restart unless-stopped \
+  pfeak/codegate:latest
+```
+
+命令参数说明：
+
+> `-p 8877:8877`：映射前端管理后台端口  
+> `-v codegate-data:/app/backend/data`：挂载数据卷，实现数据持久化  
+
+启动后访问：
+
+- **管理界面**: `<http://localhost:8877>`
+
+后续步骤中的 `base_url` 请填写 `http://localhost:8877`（若 API 与调用方不在同一台机器，请改为实际主机地址或域名）。
+
 ## 前置准备
 
-- 已部署的 CodeGate 服务（后端 API 地址与管理后台）
+- 已部署的 CodeGate 服务（后端 API 地址与管理后台）；若已按上一节用 Docker 一键启动，则无需额外准备。
 
 ## 步骤一：安装 SDK
 
