@@ -1,0 +1,6 @@
+---
+title: "查询激活码列表"
+openapi: "GET /api/v1/projects/{project_id}/codes"
+---
+
+分页查询指定项目下的激活码列表。支持按状态筛选（`unused` / `used` / `disabled` / `expired`）和按激活码内容的 `search` 关键词搜索。返回字段包含 `id`、`code`、`status`、`is_disabled`、`is_expired`、`expires_at`、`verified_at`、`verified_by`、`created_at`。

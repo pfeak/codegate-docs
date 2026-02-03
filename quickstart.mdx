@@ -1,0 +1,146 @@
+---
+title: "快速开始"
+description: "四步完成 CodeGate 安装与第一次激活码核销"
+---
+
+## 前置准备
+
+- 已部署的 CodeGate 服务（后端 API 地址与管理后台）
+
+## 步骤一：安装 SDK
+
+根据你的技术栈选择：
+
+<Tabs>
+  <Tab title="Python">
+```bash
+pip install codegate-sdk
+```
+
+或使用 `uv`：
+
+```bash
+uv pip install codegate-sdk
+```
+  </Tab>
+  <Tab title="JavaScript">
+```bash
+npm install codegate-sdk
+```
+  </Tab>
+</Tabs>
+
+## 步骤二：在 CodeGate 创建项目并生成 API 密钥
+
+1. 登录 CodeGate 管理后台。
+2. 创建项目（若尚未创建）。
+3. 进入项目详情 → **API 密钥** 管理。
+4. 点击 **生成密钥**，获得 `api_key`、`secret`、`project_id`。
+
+<Warning>
+  **Secret 仅显示一次**，生成后请立即保存，后续无法再次查看。
+</Warning>
+
+## 步骤三：初始化客户端
+
+<Tabs>
+  <Tab title="Python">
+```python
+from codegate_sdk import CodeGateClient
+
+client = CodeGateClient(
+    api_key="550e8400e29b41d4a716446655440000",
+    secret="a1b2c3d4e5f6...",
+    project_id="550e8400e29b41d4a716446655440000",
+    base_url="https://api.example.com"
+)
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+import { CodeGateClient } from 'codegate-sdk';
+
+const client = new CodeGateClient({
+  apiKey: '550e8400e29b41d4a716446655440000',
+  secret: 'a1b2c3d4e5f6...',
+  projectId: '550e8400e29b41d4a716446655440000',
+  baseUrl: 'https://api.example.com',
+});
+```
+  </Tab>
+</Tabs>
+
+将 `api_key`、`secret`、`project_id` 替换为步骤二获得的凭证，`base_url` 替换为 CodeGate 后端 API 地址。
+
+## 步骤四：核销激活码
+
+<Tabs>
+  <Tab title="Python">
+```python
+result = client.verify_code(code="ABC12345", verified_by="user123")
+if result['success']:
+    print(f"核销成功，核销时间: {result['verified_at']}")
+else:
+    print(f"核销失败: {result['error_code']} - {result['message']}")
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+const result = await client.verifyCode({ code: 'ABC12345', verifiedBy: 'user123' });
+if (result.success) {
+  console.log('核销成功，核销时间:', result.verified_at);
+} else {
+  console.log('核销失败:', result.error_code, result.message);
+}
+```
+  </Tab>
+</Tabs>
+
+## 环境变量配置（推荐）
+
+生产环境建议通过环境变量注入凭证：
+
+| 环境变量 | 说明 |
+|----------|------|
+| `CODEGATE_API_KEY` | API Key |
+| `CODEGATE_SECRET` | API Secret |
+| `CODEGATE_PROJECT_ID` | 项目 ID |
+| `CODEGATE_BASE_URL` | API 基础 URL（可选，默认 `https://api.example.com`） |
+
+<Tabs>
+  <Tab title="Python">
+```python
+import os
+client = CodeGateClient(
+    api_key=os.getenv("CODEGATE_API_KEY"),
+    secret=os.getenv("CODEGATE_SECRET"),
+    project_id=os.getenv("CODEGATE_PROJECT_ID"),
+    base_url=os.getenv("CODEGATE_BASE_URL", "https://api.example.com")
+)
+```
+  </Tab>
+  <Tab title="JavaScript">
+```typescript
+const client = new CodeGateClient({
+  apiKey: process.env.CODEGATE_API_KEY!,
+  secret: process.env.CODEGATE_SECRET!,
+  projectId: process.env.CODEGATE_PROJECT_ID!,
+  baseUrl: process.env.CODEGATE_BASE_URL || 'https://api.example.com',
+});
+```
+  </Tab>
+</Tabs>
+
+## 下一步
+
+<CardGroup cols={2}>
+  <Card title="Python SDK" icon="python" href="/sdk/python">
+    查看更多 Python 用法
+  </Card>
+  <Card title="JavaScript SDK" icon="javascript" href="/sdk/javascript">
+    查看更多 JavaScript 用法
+  </Card>
+  <Card title="API 参考" icon="code" href="/api-reference/introduction">
+    直接调用 REST API
+  </Card>
+</CardGroup>

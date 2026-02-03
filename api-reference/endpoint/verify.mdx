@@ -1,0 +1,6 @@
+---
+title: "核销激活码"
+openapi: "POST /api/v1/projects/{project_id}/codes/verify"
+---
+
+核销指定项目下的激活码。请求体需包含 `code`（必需），可选 `verified_by` 用于记录核销方。仅当激活码处于未使用、未禁用、未过期且项目启用时核销成功。响应中 `success=true` 表示核销成功，`success=false` 时查看 `error_code` 与 `message` 获取失败原因（如 `CODE_ALREADY_USED`、`CODE_EXPIRED` 等）。

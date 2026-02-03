@@ -1,0 +1,6 @@
+---
+title: "按激活码内容查询"
+openapi: "GET /api/v1/projects/{project_id}/codes/by-code/{code}"
+---
+
+根据激活码内容（非 ID）查询单个激活码详情。路径中的 `{code}` 为激活码原文，需进行 URL 编码。响应格式与 [按 ID 查询](/api-reference/endpoint/get-code) 一致，包含 `verification_logs`。

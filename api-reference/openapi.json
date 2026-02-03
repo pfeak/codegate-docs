@@ -1,0 +1,394 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CodeGate SDK API",
+    "description": "CodeGate 激活码管理服务 SDK API - 使用 API Key + HMAC-SHA256 签名认证",
+    "license": {
+      "name": "Apache-2.0"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.example.com",
+      "description": "CodeGate API 服务器"
+    }
+  ],
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/projects/{project_id}": {
+      "get": {
+        "summary": "获取项目信息",
+        "description": "获取指定项目的详细信息，包含统计信息",
+        "operationId": "getProject",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "description": "项目 ID（32 位 UUID，无连字符）",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "项目信息",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Project" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/codes": {
+      "get": {
+        "summary": "查询激活码列表",
+        "description": "分页查询激活码，支持状态筛选和关键词搜索",
+        "operationId": "listCodes",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": { "type": "integer", "default": 20, "maximum": 100 }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "unused | used | disabled | expired",
+            "schema": { "type": "string", "enum": ["unused", "used", "disabled", "expired"] }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "按激活码内容搜索",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "激活码列表",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CodeListResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/codes/{code_id}": {
+      "get": {
+        "summary": "查询单个激活码（按 ID）",
+        "operationId": "getCode",
+        "parameters": [
+          { "name": "project_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "code_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "激活码详情",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CodeDetail" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/codes/by-code/{code}": {
+      "get": {
+        "summary": "查询单个激活码（按内容）",
+        "operationId": "getCodeByCode",
+        "parameters": [
+          { "name": "project_id", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "code", "in": "path", "required": true, "description": "激活码内容（URL 编码）", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "激活码详情",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CodeDetail" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/codes/verify": {
+      "post": {
+        "summary": "核销激活码",
+        "operationId": "verifyCode",
+        "parameters": [
+          { "name": "project_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["code"],
+                "properties": {
+                  "code": { "type": "string" },
+                  "verified_by": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "核销结果（success=true 成功，success=false 业务失败）",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/VerifyResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/codes/reactivate": {
+      "post": {
+        "summary": "重新激活激活码",
+        "operationId": "reactivateCode",
+        "parameters": [
+          { "name": "project_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["code"],
+                "properties": {
+                  "code": { "type": "string" },
+                  "reactivated_by": { "type": "string" },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "重新激活结果",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ReactivateResponse" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" }
+        }
+      }
+    },
+    "/api/v1/projects/{project_id}/statistics": {
+      "get": {
+        "summary": "获取项目统计信息",
+        "operationId": "getStatistics",
+        "parameters": [
+          { "name": "project_id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "统计信息",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Statistics" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "status": { "type": "boolean" },
+          "expires_at": { "type": "integer", "nullable": true },
+          "created_at": { "type": "integer" },
+          "statistics": { "$ref": "#/components/schemas/ProjectStatistics" }
+        }
+      },
+      "ProjectStatistics": {
+        "type": "object",
+        "properties": {
+          "total_codes": { "type": "integer" },
+          "used_codes": { "type": "integer" },
+          "unused_codes": { "type": "integer" },
+          "disabled_codes": { "type": "integer" },
+          "expired_codes": { "type": "integer" }
+        }
+      },
+      "CodeItem": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "code": { "type": "string" },
+          "status": { "type": "boolean" },
+          "is_disabled": { "type": "boolean" },
+          "is_expired": { "type": "boolean" },
+          "expires_at": { "type": "integer", "nullable": true },
+          "verified_at": { "type": "integer", "nullable": true },
+          "verified_by": { "type": "string", "nullable": true },
+          "created_at": { "type": "integer" }
+        }
+      },
+      "CodeListResponse": {
+        "type": "object",
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/CodeItem" } },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "page_size": { "type": "integer" },
+          "total_pages": { "type": "integer" }
+        }
+      },
+      "CodeDetail": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CodeItem" },
+          {
+            "type": "object",
+            "properties": {
+              "verification_logs": { "type": "array", "items": { "$ref": "#/components/schemas/VerificationLog" } }
+            }
+          }
+        ]
+      },
+      "VerificationLog": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "verified_at": { "type": "integer" },
+          "verified_by": { "type": "string", "nullable": true },
+          "ip_address": { "type": "string", "nullable": true },
+          "result": { "type": "string" }
+        }
+      },
+      "VerifyResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "code_id": { "type": "string", "nullable": true },
+          "code": { "type": "string" },
+          "verified_at": { "type": "integer", "nullable": true },
+          "message": { "type": "string" },
+          "error_code": { "type": "string", "nullable": true }
+        }
+      },
+      "ReactivateResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "code_id": { "type": "string", "nullable": true },
+          "code": { "type": "string" },
+          "reactivated_at": { "type": "integer", "nullable": true },
+          "message": { "type": "string" },
+          "error_code": { "type": "string", "nullable": true }
+        }
+      },
+      "Statistics": {
+        "type": "object",
+        "properties": {
+          "project_id": { "type": "string" },
+          "total_codes": { "type": "integer" },
+          "used_codes": { "type": "integer" },
+          "unused_codes": { "type": "integer" },
+          "disabled_codes": { "type": "integer" },
+          "expired_codes": { "type": "integer" },
+          "usage_rate": { "type": "number" },
+          "recent_verifications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "verified_at": { "type": "integer" },
+                "verified_by": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "认证失败（API Key、签名、时间戳、项目状态）",
+        "content": {
+          "application/json": {
+            "schema": { "type": "object", "properties": { "detail": { "type": "string" } } }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "project_id 与 API Key 绑定的项目不匹配",
+        "content": {
+          "application/json": {
+            "schema": { "type": "object", "properties": { "detail": { "type": "string" } } }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "资源不存在",
+        "content": {
+          "application/json": {
+            "schema": { "type": "object", "properties": { "detail": { "type": "string" } } }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "API Key + X-Timestamp + X-Signature（HMAC-SHA256）"
+      }
+    }
+  }
+}

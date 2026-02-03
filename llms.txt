@@ -1,0 +1,31 @@
+# CodeGate 文档
+
+> 文档索引供 AI/LLM 发现与检索。在站点根路径后加 `/llms.txt` 即可访问本文件。
+
+## 指南
+
+- [CodeGate 简介](/): 轻量级激活码、邀请码、验证码管理服务 - 提供 REST API 和多语言 SDK
+- [快速开始](/quickstart): 四步完成 CodeGate 安装与第一次激活码核销
+- [llms.txt](/llms): llms.txt 的打开入口，供 AI/LLM 理解 CodeGate 文档
+
+## SDK
+
+- [Python SDK](/sdk/python): CodeGate Python 客户端 - 激活码查询、核销、重新激活
+- [JavaScript SDK](/sdk/javascript): CodeGate JavaScript/TypeScript 客户端 - 激活码查询、核销、重新激活
+
+## API 参考
+
+- [API 参考](/api-reference/introduction): CodeGate SDK API 接口说明 - API Key + HMAC 签名认证
+- [获取项目信息](/api-reference/endpoint/get-project): 获取指定项目详情及统计
+- [查询激活码列表](/api-reference/endpoint/list-codes): 分页查询激活码，支持状态筛选与搜索
+- [查询单个激活码（按 ID）](/api-reference/endpoint/get-code): 按激活码 ID 查询详情
+- [按激活码内容查询](/api-reference/endpoint/get-code-by-code): 按激活码内容查询详情
+- [核销激活码](/api-reference/endpoint/verify): 核销指定项目下的激活码
+- [重新激活激活码](/api-reference/endpoint/reactivate): 将已使用的激活码重置为未使用
+- [获取统计信息](/api-reference/endpoint/statistics): 获取项目统计信息
+
+## AI 工具集成（文档贡献者）
+
+- [Cursor 配置](/ai-tools/cursor): 配置 Cursor 以编写和维护 CodeGate 文档（贡献者指南）
+- [Claude Code 配置](/ai-tools/claude-code): 配置 Claude Code 以编写和维护 CodeGate 文档（贡献者指南）
+- [Windsurf 配置](/ai-tools/windsurf): 配置 Windsurf 以编写和维护 CodeGate 文档（贡献者指南）

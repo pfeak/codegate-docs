@@ -1,0 +1,67 @@
+---
+title: "API 参考"
+description: "CodeGate SDK API 接口说明 - API Key + HMAC 签名认证"
+---
+
+## 概述
+
+CodeGate SDK API 提供项目信息、激活码查询、核销、重新激活、统计等接口。所有接口均需使用 **API Key + HMAC-SHA256 签名** 认证。
+
+推荐优先使用 [Python SDK](/sdk/python) 或 [JavaScript SDK](/sdk/javascript)，无需手写签名逻辑。
+
+## 认证方式
+
+每个请求需在 HTTP Header 中携带：
+
+| Header | 说明 |
+|--------|------|
+| `X-API-Key` | API Key（32 位 UUID，无连字符） |
+| `X-Timestamp` | Unix 时间戳（秒级） |
+| `X-Signature` | HMAC-SHA256 签名（十六进制小写，64 字符） |
+
+签名字符串格式：
+
+```
+{METHOD}\n{PATH}\n{QUERY_STRING}\n{BODY_SHA256_HEX}\n{TIMESTAMP}
+```
+
+- 无 body 时使用空串的 SHA256：`e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+- 时间戳需在 ±5 分钟内，防止重放攻击
+
+## 端点速查
+
+| 方法 | 路径 | 用途 |
+|------|------|------|
+| GET | `/api/v1/projects/{project_id}` | 项目信息 |
+| GET | `/api/v1/projects/{project_id}/codes` | 分页查激活码 |
+| GET | `/api/v1/projects/{project_id}/codes/{code_id}` | 按 ID 查单个 |
+| GET | `/api/v1/projects/{project_id}/codes/by-code/{code}` | 按内容查单个 |
+| POST | `/api/v1/projects/{project_id}/codes/verify` | 核销 |
+| POST | `/api/v1/projects/{project_id}/codes/reactivate` | 重新激活 |
+| GET | `/api/v1/projects/{project_id}/statistics` | 统计信息 |
+
+## 业务错误码（核销/重新激活）
+
+响应中 `success=false` 时，`error_code` 可能为：
+
+| 错误码 | 含义 |
+|--------|------|
+| `CODE_NOT_FOUND` | 激活码不存在 |
+| `CODE_ALREADY_USED` | 已使用（核销时） |
+| `CODE_ALREADY_UNUSED` | 已是未使用（重新激活时） |
+| `CODE_DISABLED` | 已禁用 |
+| `CODE_EXPIRED` | 已过期 |
+| `PROJECT_DISABLED` | 项目已禁用 |
+| `PROJECT_EXPIRED` | 项目已过期 |
+
+## HTTP 状态码
+
+| 状态码 | 说明 |
+|--------|------|
+| 200 | 请求成功 |
+| 400 | 参数错误 |
+| 401 | 认证失败 |
+| 403 | project_id 与 API Key 不匹配 |
+| 404 | 资源不存在 |
+| 429 | 限流 |
+| 500 | 服务器错误 |

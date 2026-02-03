@@ -1,0 +1,85 @@
+---
+title: "CodeGate 简介"
+description: "轻量级激活码、邀请码、验证码管理服务 - 提供 REST API 和多语言 SDK"
+---
+
+## 什么是 CodeGate？
+
+CodeGate 是一个轻量级 Python 后端服务，专注于 **激活码、邀请码、验证码（OTP）** 的生成、过期、验证和管理。它提供 **REST API** 和 **Python / JavaScript SDK**，可以 **独立运行** 或 **嵌入其他系统**，非常适合 **SaaS 平台、移动应用、游戏、会员管理系统** 等场景。
+
+## 核心功能
+
+- **项目管理**：创建、更新、查询项目，支持项目级别的激活码管理
+- **批量生成激活码**：自定义格式（长度、前缀、后缀），支持独立过期时间
+- **激活码核销**：通过 API 或 Web 界面进行核销验证，防重复核销，自动检查过期
+- **重新激活**：支持将已使用的激活码重置为未使用状态（如用户退款场景）
+- **API Key 认证**：HMAC-SHA256 签名认证，Secret 永不传输
+- **多语言 SDK**：Python、JavaScript/TypeScript 官方客户端
+
+## 快速开始
+
+<Card
+  title="快速开始"
+  icon="rocket"
+  href="/quickstart"
+  horizontal
+>
+  四步完成安装与第一次核销
+</Card>
+
+## 使用 SDK
+
+优先使用官方 SDK，无需手写签名逻辑：
+
+<Columns cols={2}>
+  <Card
+    title="Python SDK"
+    icon="python"
+    href="/sdk/python"
+  >
+    适用于 Python 3.10+ 项目
+  </Card>
+  <Card
+    title="JavaScript SDK"
+    icon="javascript"
+    href="/sdk/javascript"
+  >
+    适用于 Node.js 18+ 与 TypeScript
+  </Card>
+</Columns>
+
+## API 参考
+
+直接调用 REST API？查看完整的端点文档与 OpenAPI 规范：
+
+<Card
+  title="API 参考"
+  icon="terminal"
+  href="/api-reference/introduction"
+>
+  项目信息、激活码查询、核销、重新激活、统计
+</Card>
+
+## AI / LLM 索引
+
+为 AI 或 LLM 提供文档索引（llms.txt），可在新窗口打开：
+
+<Card
+  title="llms.txt"
+  icon="file-lines"
+  href="/llms"
+  horizontal
+>
+  在新窗口打开 llms.txt
+</Card>
+
+## 技术栈
+
+- **后端**: Python 3.12+, FastAPI, SQLAlchemy
+- **数据库**: SQLite / PostgreSQL
+- **前端**: Next.js + Tailwind CSS
+- **部署**: Docker / docker compose
+
+## 许可证
+
+Apache License 2.0
