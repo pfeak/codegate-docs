@@ -82,12 +82,7 @@
         "label": "支持",
         "href": "mailto:pfeak163@163.com"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "管理后台",
-      "href": "https://codegate.example.com"
-    }
+    ]
   },
   "contextual": {
     "options": [
